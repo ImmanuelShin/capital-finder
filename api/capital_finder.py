@@ -26,11 +26,13 @@ def generate_response(country_info):
 
     currencies_formatted = ", ".join(currencies_info)
 
-    country_languages = list(country_info.get("languages", {}).values())
+    
 
     response = f"Country: {country_name}\n"
     response += f"Capitals: {', '.join(country_capitals)}\n"
     response += f"Currencies: {', '.join(currencies_formatted)}\n"
+    
+    country_languages = list(country_info.get("languages", {}).values())
     response += f"Languages: {', '.join(country_languages)}"
 
     return response
