@@ -11,6 +11,19 @@ def get_country_info(name):
         return country_data
     else:
         return None
+    
+def generate_response(country_info):
+    country_name = country_info.get("name", {}).get("common", "N/A")
+    country_capitals = country_info.get("capital", ["N/A"])
+    country_currencies = country_info.get("currencies", ["N/A"])
+    country_languages = country_info.get("languages", {}).keys()
+
+    response = f"Country: {country_name}\n"
+    response += f"Capitals: {', '.join(country_capitals)}\n"
+    response += f"Currencies: {', '.join(country_currencies)}\n"
+    response += f"Languages: {', '.join(country_languages)}"
+
+    return response
 
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -18,26 +31,34 @@ class handler(BaseHTTPRequestHandler):
         query_string_list = parse.parse_qsl(url_components.query)
         query_params = dict(query_string_list)
 
-        if "country" in query_params:
+        if "country" in query_params and "capital" in query_params:
+            country_name = query_params["country"].capitalize()
+            capital_name = query_params["capital"].capitalize()
+            
+            country_info = get_country_info(country_name)
+
+            if country_info and capital_name in country_info.get("capital", []):
+                message = generate_response(country_info)
+            else:
+                message = f"Invalid country/capital combination: {country_name}/{capital_name}."
+
+        elif "country" in query_params:
             country_name = query_params["country"].capitalize()
             country_info = get_country_info(country_name)
 
             if country_info:
-                print('Got it')
-                country_capital = country_info.get("capital", ["N/A"])[0]
-                message = f"The capital of {country_name} is {country_capital}."
+                message = generate_response(country_info)
             else:
-                message = f"Country not found for {country_name}."
+                message = f"Country not found: {country_name}."
 
         elif "capital" in query_params:
             capital_name = query_params["capital"].capitalize()
             country_info = next((info for info in get_country_info("") if capital_name in info.get("capital", [""]).lower()), None)
 
             if country_info:
-                country_name = country_info.get("name", {}).get("common", "N/A")
-                message = f"{capital_name} is the capital of {country_name}."
+                message = generate_response(country_info)
             else:
-                message = f"Capital not found for {capital_name}."
+                message = f"Capital not found: {capital_name}."
 
         else:
             message = "Bad Request: Please provide a country or capital parameter."
