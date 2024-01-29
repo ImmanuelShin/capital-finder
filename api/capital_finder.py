@@ -38,7 +38,8 @@ class handler(BaseHTTPRequestHandler):
             country_info = get_country_info(country_name)
 
             if country_info and capital_name in country_info.get("capital", []):
-                message = generate_response(country_info)
+                message = f"Correct! The capital of {country_name} is {capital_name}\n"
+                message += generate_response(country_info)
             else:
                 message = f"Invalid country/capital combination: {country_name}/{capital_name}."
 
