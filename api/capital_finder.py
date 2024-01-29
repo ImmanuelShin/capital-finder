@@ -12,7 +12,7 @@ def get_country_info(name):
     else:
         return None
 
-class CapitalFinderHandler(BaseHTTPRequestHandler):
+class handler(BaseHTTPRequestHandler):
     def do_GET(self):
         url_components = parse.urlsplit(self.path)
         query_string_list = parse.parse_qsl(url_components.query)
@@ -23,6 +23,7 @@ class CapitalFinderHandler(BaseHTTPRequestHandler):
             country_info = get_country_info(country_name)
 
             if country_info:
+                print('Got it')
                 country_capital = country_info.get("capital", ["N/A"])[0]
                 message = f"The capital of {country_name} is {country_capital}."
             else:
@@ -45,3 +46,5 @@ class CapitalFinderHandler(BaseHTTPRequestHandler):
         self.send_header('Content-type', 'text/plain')
         self.end_headers()
         self.wfile.write(message.encode('utf-8'))
+
+        return
