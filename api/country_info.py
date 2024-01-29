@@ -12,7 +12,7 @@ def get_country_info(name):
     else:
         return None
 
-def display_country_info(country_info):
+class handler(BaseHTTPRequestHandler):
     def do_GET(self):
         url_components = parse.urlsplit(self.path)
         query_string_list = parse.parse_qsl(url_components.query)
