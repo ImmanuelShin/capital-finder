@@ -24,7 +24,7 @@ def generate_response(country_info):
         currency_symbol = currency_data.get("symbol", "N/A")
         currencies_info.append((currency_name, currency_code, currency_symbol))
 
-    currencies_formatted = ", ".join([f"{name}, {code}, {symbol}" for name, code, symbol in currencies_info])
+    currencies_formatted = ", ".join(currencies_info)
 
     country_languages = list(country_info.get("languages", {}).values())
 
