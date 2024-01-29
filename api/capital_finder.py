@@ -20,7 +20,7 @@ def generate_response(country_info):
 
     response = f"Country: {country_name}\n"
     response += f"Capitals: {', '.join(country_capitals)}\n"
-    response += f"Currencies: {', '.join(currencies_data)}\n"
+    response += f"Currencies: {currencies_data}\n"
 
     country_languages = list(country_info.get("languages", {}).values())
     response += f"Languages: {', '.join(country_languages)}"
