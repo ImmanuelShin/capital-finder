@@ -16,7 +16,7 @@ def generate_response(country_info):
     country_name = country_info.get("name", {}).get("common", "N/A")
     country_capitals = country_info.get("capital", ["N/A"])
     country_currencies = country_info.get("currencies", ["N/A"])
-    country_languages = country_info.get("languages", {}).keys()
+    country_languages = list(country_info.get("languages", {}).values())
 
     response = f"Country: {country_name}\n"
     response += f"Capitals: {', '.join(country_capitals)}\n"
