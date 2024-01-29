@@ -17,21 +17,11 @@ def generate_response(country_info):
     country_capitals = country_info.get("capital", ["N/A"])
     
     currencies_data = country_info.get("currencies", {})
-    currencies_info = []
-
-    for currency_code, currency_data in currencies_data.items():
-        currency_name = currency_data.get("name", "N/A")
-        currency_symbol = currency_data.get("symbol", "N/A")
-        currencies_info.append((currency_name, currency_code, currency_symbol))
-
-    currencies_formatted = ", ".join(currencies_info)
-
-    
 
     response = f"Country: {country_name}\n"
     response += f"Capitals: {', '.join(country_capitals)}\n"
-    response += f"Currencies: {', '.join(currencies_formatted)}\n"
-    
+    response += f"Currencies: {', '.join(currencies_data)}\n"
+
     country_languages = list(country_info.get("languages", {}).values())
     response += f"Languages: {', '.join(country_languages)}"
 
