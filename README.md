@@ -9,3 +9,4 @@
 
 - Endpoint: /api/capital_finder?country={country name}
 - Endpoint: /api/capital_finder?capital={capital name}
+  - (i.e https://capital-finder-immanuel-shin.vercel.app/api/capital_finder?capital=seoul)
