@@ -2,7 +2,8 @@ from http.server import BaseHTTPRequestHandler
 from urllib import parse
 import requests
 
-REST_COUNTRIES_API = "https://restcountries.com/v3.1/name"
+REST_COUNTRIES_NAME = "https://restcountries.com/v3.1/name"
+REST_COUNTRIES_API_CAPITAL = "https://restcountries.com/v3.1/capital"
 
 def get_country_info(name):
     """
@@ -15,7 +16,25 @@ def get_country_info(name):
         dict or None: A dictionary containing information about the country if found, 
                       otherwise None.
     """
-    response = requests.get(f"{REST_COUNTRIES_API}/{name}")
+    response = requests.get(f"{REST_COUNTRIES_NAME}/{name}")
+    if response.status_code == 200:
+        country_data = response.json()[0]
+        return country_data
+    else:
+        return None
+    
+def get_country_info_by_capital(capital):
+    """
+    Fetches information about a country by searching for its capital.
+
+    Parameters:
+        capital (str): The capital city of the country.
+
+    Returns:
+        dict or None: A dictionary containing information about the country if found, 
+                      otherwise None.
+    """
+    response = requests.get(f"{REST_COUNTRIES_API_CAPITAL}/{capital}")
     if response.status_code == 200:
         country_data = response.json()[0]
         return country_data
@@ -81,10 +100,11 @@ class handler(BaseHTTPRequestHandler):
 
         elif "capital" in query_params:
             capital_name = query_params["capital"].capitalize()
-            country_info = next((info for info in get_country_info("") if capital_name in info.get("capital", [""]).lower()), None)
+            country_info = get_country_info_by_capital(capital_name)
 
             if country_info:
-                message = generate_response(country_info)
+                message = f"{capital_name} is the capital of {country_info['name']['common']}.\n"
+                message += generate_response(country_info)
             else:
                 message = f"Capital not found: {capital_name}."
 
