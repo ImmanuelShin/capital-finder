@@ -47,6 +47,10 @@ def generate_response(country_info, int, cap=None):
 
     Parameters:
         country_info (dict): A dictionary containing information about the country.
+        response_type (int): An integer indicating the response format:
+                             - 1: "The capital of X is Y" for country queries.
+                             - 2: "{cap} is the capital of X" for capital queries.
+        cap (str, optional): The capital name (used in case of response_type == 2).
 
     Returns:
         str: A formatted response message.
@@ -73,6 +77,12 @@ class handler(BaseHTTPRequestHandler):
         None
     """
     def do_GET(self):
+        """
+        Handles GET requests and sends an appropriate response.
+
+        Returns:
+            None
+        """
         url_components = parse.urlsplit(self.path)
         query_string_list = parse.parse_qsl(url_components.query)
         query_params = dict(query_string_list)
