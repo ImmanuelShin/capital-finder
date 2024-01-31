@@ -41,7 +41,7 @@ def get_country_info_by_capital(capital):
     else:
         return None
     
-def generate_response(country_info):
+def generate_response(country_info, int, cap=None):
     """
     Generates a response message based on the country information.
 
@@ -51,15 +51,19 @@ def generate_response(country_info):
     Returns:
         str: A formatted response message.
     """
-    country_name = country_info.get("name", {}).get("common", "N/A")
-    country_capitals = country_info.get("capital", ["N/A"])
+    message = ''
+    if int == 1:
+        country_name = country_info.get("name", {}).get("common", "N/A")
+        country_capitals = country_info.get("capital", ["N/A"])
+        if len(country_capitals) == 1:
+            message = f"The capital of {country_name} is {country_capitals[0]}."
+        else:
+            message = "N/A"
+    if int == 2:
+        country_name = country_info.get("name", {}).get("common", "N/A")
+        message = f"{cap} is the capital of {country_name}."
 
-    if len(country_capitals) == 1:
-        capital_message = f"The capital of {country_name} is {country_capitals[0]}."
-    else:
-        capital_message = "N/A"
-
-    return capital_message
+    return message
 
 class handler(BaseHTTPRequestHandler):
     """
@@ -78,15 +82,16 @@ class handler(BaseHTTPRequestHandler):
             country_info = get_country_info(country_name)
 
             if country_info:
-                message = generate_response(country_info)
+                message = generate_response(country_info, 1)
             else:
                 message = f"Country not found: {country_name}."
 
         elif "capital" in query_params:
             capital_name = query_params["capital"].capitalize()
+            country_capital = get_country_info_by_capital(capital_name)
 
-            if capital_name == "Santiago":
-                message = f"{capital_name} is the capital of Chile."
+            if country_capital:
+                message = generate_response(country_capital, 2, capital_name)
             else:
                 message = f"Capital not found: {capital_name}."
 
